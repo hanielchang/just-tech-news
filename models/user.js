@@ -1,8 +1,14 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
+const bcrypt = require('bcrypt');
 
 // create our User model
-class User extends Model { }
+class User extends Model {
+    // set up method to run on instance data (per user) to check password
+    checkPassword(loginPw) {
+        return bcrypt.compareSync(loginPw, this.password);
+    }
+}
 
 // define table columns and configuration
 User.init(
@@ -48,7 +54,18 @@ User.init(
     // This is object #2.
     {
         // TABLE CONFIGURATION OPTIONS GO HERE (https://sequelize.org/v5/manual/models-definition.html#configuration))
-
+        hooks: {
+            // set up beforeCreate lifecycle "hook" functionality
+            async beforeCreate(newUserData) {
+                newUserData.password = await bcrypt.hash(newUserData.password, 10);
+                return newUserData;
+            },
+            // set up beforeUpdate lifecycle "hook" functionality
+            async beforeUpdate(updatedUserData) {
+                updatedUserData.password = await bcrypt.hash(updatedUserData.password, 10);
+                return updatedUserData;
+            }
+        },
         // pass in our imported sequelize connection (the direct connection to our database)
         sequelize,
         // don't automatically create createdAt/updatedAt timestamp fields
@@ -63,3 +80,28 @@ User.init(
 );
 
 module.exports = User;
+
+
+
+
+// hooks: {
+//     // set up beforeCreate lifecycle "hook" functionality
+//     beforeCreate(userData) {
+//         return bcrypt.hash(userData.password, 10).then(newUserData => {
+//             return newUserData
+//         });
+//     }
+// }
+// In this bcrypt hash function, we pass in the userData object that contains 
+// the plaintext password in the password property. We also pass in a saltRound value of 10.
+// The resulting hashed password is then passed to the Promise object as a newUserData object 
+// with a hashed password property. The return statement then exits out of the function, 
+// returning the hashed password in the newUserData function.
+
+// ----------For line 52----------
+// The keyword pair, async/await, works in tandem to make this async 
+// function look more like a regular synchronous function expression.
+// The async keyword is used as a prefix to the function that contains 
+// the asynchronous function. await can be used to prefix the async function, 
+// which will then gracefully assign the value from the response to the newUserData's 
+// password property. The newUserData is then returned to the application with the hashed password.
