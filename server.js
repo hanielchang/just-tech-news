@@ -6,6 +6,7 @@ const exphbs = require('express-handlebars');
 const hbs = exphbs.create({});
 
 const app = express();
+// This PORT statement is required for Herkou functionality
 const PORT = process.env.PORT || 3001;
 
 app.engine('handlebars', hbs.engine);
