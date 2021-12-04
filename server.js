@@ -1,9 +1,10 @@
 const express = require('express');
+const helpers = require('./utils/helpers');
 const routes = require('./controllers');
 const sequelize = require('./config/connection');
 const path = require('path');
 const exphbs = require('express-handlebars');
-const hbs = exphbs.create({});
+const hbs = exphbs.create({ helpers });
 
 
 const app = express();
@@ -41,7 +42,7 @@ app.use(routes);
 // taking the models and connecting them to associated database tables. 
 // If it doesn't find a table, it'll create it for you!
 sequelize.sync({ force: false }).then(() => {
-    app.listen(PORT, () => console.log('Now listening'));
+  app.listen(PORT, () => console.log('Now listening'));
 });
 
 // If we change the value of the force property to true, then the database connection must 
