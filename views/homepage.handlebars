@@ -1,3 +1,7 @@
+{{!-- Your file/folder structure MUST be set up this way for Handlebars.js to work correctly. 
+You will always have a main layout located at (and named) views/layouts/main.handlebars. 
+All other template files will go directly in the views folder (views/welcome.handlebars). --}}
+
 <ol class="post-list">
     {{#each posts as |post|}}
     <li>
@@ -16,3 +20,7 @@
     </li>
     {{/each}}
 </ol>
+
+{{!-- Within the {{#each}} block, Handlebars.js is smart enough to know that it's working with an object on each iteration, 
+so it looks for the necessary properties. We can make this a little clearer, however, by declaring a variable name in the 
+#each expression and using that name for the subsequent placeholders. --}}
