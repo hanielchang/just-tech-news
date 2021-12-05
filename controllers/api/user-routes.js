@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Post, Vote } = require("../../models");
+const { User, Post, Vote, Comment } = require("../../models");
 
 // GET all /api/users
 router.get('/', (req, res) => {
@@ -84,7 +84,7 @@ router.post('/', (req, res) => {
 // makes it a more secure way of transferring data from the client to the server. 
 // Remember, the password is still in plaintext, which makes this transmission process a vulnerable link in the chain.
 
-router.post('/login', (req, res) => {
+router.post('/login',  (req, res) => {
     User.findOne({
         where: {
             email: req.body.email
